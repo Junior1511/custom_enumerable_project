@@ -18,18 +18,57 @@ module Enumerable
     return to_enum(:my_select) unless block_given?
     
     array = []
-    for i in self
-      if yield(i) == true
-        array << i
-      end
+    my_each do |i|
+      array << i if yield(i)
     end
     #returns new array with truthy values
     array
   end
-  
+ 
   def my_all?
-    true unless self.include?(false, nil) 
+    for i in self
+      if block_given?
+        # If there's a block, ONLY check the result of the yield
+        result = yield(i)
+        return false if result == false || result == nil
+      else
+        # If there's NO block, check the element itself
+        return false if i == false || i == nil
+      end
+    end
+    true # If we finish the loop without returning false, it's true
   end
+
+  def my_any?
+    for i in self
+      if block_given?
+        result = yield(i)
+        # Check if result is truthy (not nil and not false)
+        return true if result != false && result != nil
+      else
+        # Check if element itself is truthy
+        return true if i != false && i != nil
+      end
+    end
+    false
+  end
+
+  def my_none?
+    for i in self
+      if block_given?
+        result = yield(i)
+        return false if result != false && result != nil
+      else
+        return false if i != false && i != nil
+      end
+    end
+    true
+  end
+
+  def my_count?
+    
+  end
+  
 end
 
 # You will first have to define my_each
