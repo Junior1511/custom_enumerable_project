@@ -65,10 +65,21 @@ module Enumerable
     true
   end
 
-  def my_count?
-    
+  def my_count
+    count = 0
+    for i in self
+      if block_given?
+        result = yield(i)
+        if result != false && result != nil
+          count += 1 
+        end
+      else 
+        count += 1
+      end
+    end
+    count
   end
-  
+
 end
 
 # You will first have to define my_each
