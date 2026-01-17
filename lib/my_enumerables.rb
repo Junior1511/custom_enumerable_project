@@ -80,6 +80,33 @@ module Enumerable
     count
   end
 
+  def my_map
+    new_array = []
+    for i in self
+      unless block_given?
+        return to_enum(:my_map)
+      else
+        new_array << yield(i)
+      end
+
+
+    end
+    new_array
+  end
+
+  def my_inject(initial_value=nil)
+    for i in self
+      unless block_given?
+        return to_enum(:my_inject)
+      else
+        result = yield(initial_value, i)
+        if result != nil && result!= false
+          total = initial_value + result
+        end
+      end
+    end
+    total
+  end
 end
 
 # You will first have to define my_each
