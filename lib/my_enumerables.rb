@@ -95,17 +95,22 @@ module Enumerable
   end
 
   def my_inject(initial_value=nil)
-    for i in self
-      unless block_given?
-        return to_enum(:my_inject)
-      else
-        result = yield(initial_value, i)
-        if result != nil && result!= false
-          total = initial_value + result
-        end
+    # returns enum if no block given
+    return to_enum(:my_inject) unless block_given?
+
+    if initial_value != nil
+      acumulator = initial_value
+      for i in self
+        acumulator = yield(acumulator, i)
       end
+      acumulator
+    else
+      acumulator = self[0]
+      for i in self[1..-1]
+        acumulator = yield(acumulator, i)
+      end
+      acumulator
     end
-    total
   end
 end
 
